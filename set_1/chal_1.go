@@ -1,28 +1,20 @@
-package main
+package set1
 
 import (
 	"fmt"
-	"io"
 	"log"
-	"os"
 	"strings"
 )
 
-func main() {
-	input, err := io.ReadAll(os.Stdin)
+func HexToBase64(hex string) (string, error) {
+	bytes, err := HexToByte(hex)
 	if err != nil {
 		log.Fatal(err)
 	}
-	inputstr := strings.TrimSpace(string(input))
-	bytes, err := hexToByte(inputstr)
-	if err != nil {
-		log.Fatal(err)
-	}
-	output := byteToBase64(bytes)
-	fmt.Print(output)
+	return ByteToBase64(bytes), nil
 }
 
-func hexToByte(hex string) ([]byte, error) {
+func HexToByte(hex string) ([]byte, error) {
 	if len(hex)%2 != 0 {
 		return nil, fmt.Errorf("Hex input length is an odd number (%d)", len(hex))
 	}
@@ -46,7 +38,7 @@ func hexToByte(hex string) ([]byte, error) {
 	return result, nil
 }
 
-func byteToBase64(b []byte) string {
+func ByteToBase64(b []byte) string {
 	base := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
 	result := make([]byte, 0, len(b))
