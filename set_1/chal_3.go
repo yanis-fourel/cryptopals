@@ -1,6 +1,7 @@
 package set1
 
 import (
+	"cmp"
 	"slices"
 	"strings"
 )
@@ -29,13 +30,7 @@ func DecryptEnglishSingleByteXOR(hex string) (SbxorResult, error) {
 	}
 
 	slices.SortFunc(attempts, func(a, b SbxorResult) int {
-		if a.engScore > b.engScore {
-			return -1
-		}
-		if a.engScore < b.engScore {
-			return 1
-		}
-		return 0
+		return cmp.Compare(b.engScore, a.engScore)
 	})
 
 	return attempts[0], nil
