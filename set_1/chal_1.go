@@ -7,14 +7,14 @@ import (
 )
 
 func HexToBase64(hex string) (string, error) {
-	bytes, err := HexToByte(hex)
+	bytes, err := HexToBytes(hex)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return ByteToBase64(bytes), nil
+	return BytesToBase64(bytes), nil
 }
 
-func HexToByte(hex string) ([]byte, error) {
+func HexToBytes(hex string) ([]byte, error) {
 	if len(hex)%2 != 0 {
 		return nil, fmt.Errorf("Hex input length is an odd number (%d)", len(hex))
 	}
@@ -38,7 +38,7 @@ func HexToByte(hex string) ([]byte, error) {
 	return result, nil
 }
 
-func ByteToBase64(b []byte) string {
+func BytesToBase64(b []byte) string {
 	base := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
 	result := make([]byte, 0, len(b))
