@@ -1,35 +1,34 @@
 package set1
 
 import (
-	"fmt"
 	"slices"
 	"strings"
 )
 
-type attempt = struct {
-	b         byte
+type SbxorResult = struct {
+	key       byte
 	decrypted string
 	engScore  float32
 }
 
-func DecryptEnglishSingleByteXOR(hex string) (string, error) {
+func DecryptEnglishSingleByteXOR(hex string) (SbxorResult, error) {
 	bytes, err := HexToBytes(hex)
 	if err != nil {
-		return "", err
+		return SbxorResult{}, err
 	}
 
-	attempts := make([]attempt, 0, 128)
+	attempts := make([]SbxorResult, 0, 128)
 	for b := 0; b < 128; b++ {
 		bb := byte(b)
 		decrypted := string(SingleByteXOR(bytes, bb))
-		attempts = append(attempts, attempt{
-			b:         bb,
+		attempts = append(attempts, SbxorResult{
+			key:       bb,
 			decrypted: decrypted,
 			engScore:  EnglishLetterFreqScore(decrypted),
 		})
 	}
 
-	slices.SortFunc(attempts, func(a, b attempt) int {
+	slices.SortFunc(attempts, func(a, b SbxorResult) int {
 		if a.engScore > b.engScore {
 			return -1
 		}
@@ -39,7 +38,7 @@ func DecryptEnglishSingleByteXOR(hex string) (string, error) {
 		return 0
 	})
 
-	return attempts[0].decrypted, nil
+	return attempts[0], nil
 }
 
 func SingleByteXOR(bytes []byte, b byte) []byte {
