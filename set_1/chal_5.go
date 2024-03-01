@@ -2,10 +2,14 @@ package set1
 
 import ()
 
-func EncryptWithRepeatedXor(plaintext, key string) string {
+func RepeatedXor(plaintext, key []byte) []byte {
 	res := make([]byte, len(plaintext))
 	for i := 0; i < len(plaintext); i++ {
 		res[i] = plaintext[i] ^ key[i%len(key)]
 	}
-	return BytesToHex(res)
+	return res
+}
+
+func RepeatedXorhex(plaintext, key []byte) string {
+	return BytesToHex(RepeatedXor(plaintext, key))
 }

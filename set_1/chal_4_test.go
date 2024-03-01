@@ -11,7 +11,7 @@ func TestChal4(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer file.Close()
-	res, err := GetBestSbxor(file)
+	_, res, err := GetBestSbxor(file)
 
 	if err != nil {
 		t.Fatalf("Err: %v", err)

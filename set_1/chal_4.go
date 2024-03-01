@@ -4,31 +4,27 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"slices"
 )
 
-func GetBestSbxor(reader io.Reader) (SbxorResult, error) {
+func GetBestSbxor(reader io.Reader) (byte, DecryptAttempt, error) {
 	scanner := bufio.NewScanner(reader)
 	line := -1
-	results := make([]SbxorResult, 0)
+
+	var bestk byte
+	var bestAttempt DecryptAttempt
+
 	for scanner.Scan() {
 		line += 1
 		cipherHex := scanner.Text()
-		res, err := DecryptEnglishSingleByteXOR(cipherHex)
+		k, res, err := DecryptEnglishSingleByteXORhex(cipherHex)
 		if err != nil {
-			return SbxorResult{}, fmt.Errorf("Error on line %d: %w\n", line, err)
+			return 0, DecryptAttempt{}, fmt.Errorf("Error on line %d: %w\n", line, err)
 		}
-		results = append(results, res)
+		if res.engScore > bestAttempt.engScore {
+			bestk = k
+			bestAttempt = res
+		}
 	}
-	slices.SortFunc(results, func(a, b SbxorResult) int {
-		if a.engScore < b.engScore {
-			return 1
-		}
-		if a.engScore > b.engScore {
-			return -1
-		}
-		return 0
-	})
 
-	return results[0], nil
+	return bestk, bestAttempt, nil
 }
